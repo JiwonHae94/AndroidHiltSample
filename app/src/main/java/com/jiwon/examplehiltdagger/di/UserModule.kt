@@ -15,23 +15,28 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Converter
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object UserModule {
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class AcccountGson
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class AccountRetrofit
+
+    @Qualifier
+    @Retention(AnnotationRetention.BINARY)
+    annotation class AccountService
+
     private const val BASE_URL = "https://gsface.nota.ai"
     private val gson = GsonBuilder()
         .registerTypeAdapter(Account::class.java, AccountParser()).create()
-
-
-    @Singleton
-    @Provides
-    fun providesHttpLoggingInterceptor() = HttpLoggingInterceptor()
-        .apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
 
     @Singleton
     @Provides
@@ -43,29 +48,30 @@ object UserModule {
             .addInterceptor(httpLoggingInterceptor)
             .build()
 
-    @Qualifier
-    @Retention(AnnotationRetention.BINARY)
-    annotation class AcccountGson
 
     @AcccountGson
     @Provides
     fun provideGson() = GsonConverterFactory.create(gson)
 
+    @Provides
+    fun getService() = UserService::class.java
+
+    @AccountRetrofit
     @Singleton
     @Provides
     fun provideRetrofit(
         okHttpClient : OkHttpClient,
         @AcccountGson gsonConverter : GsonConverterFactory,
-    ) : Retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .addConverterFactory(gsonConverter)
-        .client(okHttpClient)
-        .build()
+    ) = RetrofitModule.provideRetrofit(
+        BASE_URL,
+        okHttpClient,
+        gsonConverter
+    )
 
     @Singleton
     @Provides
-    fun provideUserService(
-        retrofit : Retrofit
+    fun provideService(
+        @AccountRetrofit retrofit : Retrofit
     ) = retrofit.create(UserService::class.java)
 
     @Singleton
