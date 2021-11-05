@@ -14,23 +14,24 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object RetrofitModule {
 
-    @Singleton
-    @Provides
-    fun provideRetrofit(
-        baseUrl : String,
-        okHttpClient : OkHttpClient,
-        gsonConverter : GsonConverterFactory,
-    ) : Retrofit = Retrofit.Builder()
-        .baseUrl(baseUrl)
-        .addConverterFactory(gsonConverter)
-        .client(okHttpClient)
-        .build()
+//    @Singleton
+//    @Provides
+//    fun provideRetrofit(
+//        baseUrl : String,
+//        okHttpClient : OkHttpClient,
+//        gsonConverter : GsonConverterFactory,
+//    ) : Retrofit = Retrofit.Builder()
+//        .baseUrl(baseUrl)
+//        .addConverterFactory(gsonConverter)
+//        .client(okHttpClient)
+//        .build()
 
-
-    @Singleton
-    @Provides
-    fun providesHttpLoggingInterceptor() = HttpLoggingInterceptor()
-        .apply {
-            level = HttpLoggingInterceptor.Level.BODY
-        }
+//
+//
+//    @Singleton
+//    @Provides
+//    fun providesHttpLoggingInterceptor() = HttpLoggingInterceptor()
+//        .apply {
+//            level = HttpLoggingInterceptor.Level.BODY
+//        }
 }

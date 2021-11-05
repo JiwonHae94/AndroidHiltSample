@@ -22,61 +22,61 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object UserModule {
-    @Qualifier
-    @Retention(AnnotationRetention.BINARY)
-    annotation class AcccountGson
-
-    @Qualifier
-    @Retention(AnnotationRetention.BINARY)
-    annotation class AccountRetrofit
-
-    @Qualifier
-    @Retention(AnnotationRetention.BINARY)
-    annotation class AccountService
-
-    private const val BASE_URL = "https://gsface.nota.ai"
-    private val gson = GsonBuilder()
-        .registerTypeAdapter(Account::class.java, AccountParser()).create()
-
-    @Singleton
-    @Provides
-    fun providesOkHttpClient(
-        httpLoggingInterceptor: HttpLoggingInterceptor
-    ): OkHttpClient =
-        OkHttpClient
-            .Builder()
-            .addInterceptor(httpLoggingInterceptor)
-            .build()
-
-
-    @AcccountGson
-    @Provides
-    fun provideGson() = GsonConverterFactory.create(gson)
-
-    @Provides
-    fun getService() = UserService::class.java
-
-    @AccountRetrofit
-    @Singleton
-    @Provides
-    fun provideRetrofit(
-        okHttpClient : OkHttpClient,
-        @AcccountGson gsonConverter : GsonConverterFactory,
-    ) = RetrofitModule.provideRetrofit(
-        BASE_URL,
-        okHttpClient,
-        gsonConverter
-    )
-
-    @Singleton
-    @Provides
-    fun provideService(
-        @AccountRetrofit retrofit : Retrofit
-    ) = retrofit.create(UserService::class.java)
-
-    @Singleton
-    @Provides
-    fun provideUserRepository(
-        userService : UserService
-    ) = UserRepository(userService)
+//    @Qualifier
+//    @Retention(AnnotationRetention.BINARY)
+//    annotation class AcccountGson
+//
+//    @Qualifier
+//    @Retention(AnnotationRetention.BINARY)
+//    annotation class AccountRetrofit
+//
+//    @Qualifier
+//    @Retention(AnnotationRetention.BINARY)
+//    annotation class AccountService
+//
+//    private const val BASE_URL = "https://gsface.nota.ai"
+//    private val gson = GsonBuilder()
+//        .registerTypeAdapter(Account::class.java, AccountParser()).create()
+//
+//    @Singleton
+//    @Provides
+//    fun providesOkHttpClient(
+//        httpLoggingInterceptor: HttpLoggingInterceptor
+//    ): OkHttpClient =
+//        OkHttpClient
+//            .Builder()
+//            .addInterceptor(httpLoggingInterceptor)
+//            .build()
+//
+//
+//    @AcccountGson
+//    @Provides
+//    fun provideGson() = GsonConverterFactory.create(gson)
+//
+//    @Provides
+//    fun getService() = UserService::class.java
+//
+//    @AccountRetrofit
+//    @Singleton
+//    @Provides
+//    fun provideRetrofit(
+//        okHttpClient : OkHttpClient,
+//        @AcccountGson gsonConverter : GsonConverterFactory,
+//    ) = RetrofitModule.provideRetrofit(
+//        BASE_URL,
+//        okHttpClient,
+//        gsonConverter
+//    )
+//
+//    @Singleton
+//    @Provides
+//    fun provideService(
+//        @AccountRetrofit retrofit : Retrofit
+//    ) = retrofit.create(UserService::class.java)
+//
+//    @Singleton
+//    @Provides
+//    fun provideUserRepository(
+//        userService : UserService
+//    ) = UserRepository(userService)
 }
